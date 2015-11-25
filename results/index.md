@@ -6,6 +6,92 @@
 Accuracy (mean of diagonal of confusion matrix) is 0.531
 <p>
 
+
+#Experiment 
+*Tiny image + k nearest neighbor
+By iterating over k from 5 to 15, Found an optimized parameter k=14
+* Vocabulary building
+* bag of sift + k nearest neighbor:
+In bag of sift + k nearest neighbor, I iterated the step in the vl_dsift(img,'step',step) and found it reach the optimal value at step = 20
+
+#tried extra credits
+##Experimental design extra credit:
+Experiment with many different vocabulary sizes and report performance:
+(with setting :
+sift_sample_bow=0.9;
+sift_sample_vocab=0.3;
+lambda=0.00001;
+)
+the confusion matrix result given order:
+<table border=0 cellpadding=4 cellspacing=1>
+<tr>
+<th><th colspan=2><img src="extra1\10.jpg" width=100 height=75> with accuracy 0.348</th>
+<th><img src="extra1\20.jpg" width=10 height=75> 0.442</th>
+<th colspan=2><img src="extra1\50.jpg" width=100 height=75>with accuracy 0.514</th>
+<th colspan=2><img src="extra1\100.jpg" width=100 height=75>with accuracy 0.547</th>
+<th colspan=2><img src="extra1\200.jpg" width=100 height=75>with accuracy 0.561</th>
+<th colspan=2><img src="extra1\400.jpg" width=100 height=75>with accuracy 0.573</th>
+<th colspan=2><img src="extra1\1000.jpg" width=100 height=75>with accuracy 0.589</th>
+</tr>
+</table>
+##Randomly pick 100 training and 100 testing images for each iteration 
+Accuracy of 30 trails of randomly picking 100 testing and training samples (the random method is used in the  get_image_paths_rand.m function which outputs 100 sets of both test set and train set)
+
+<table border=0 cellpadding=4 cellspacing=1>
+<tr>
+<th>0.50</th>
+<th>0.46</th>
+<th colspan=2>0.64</th>
+<th colspan=2>0.54</th>
+<th colspan=2>0.66</th>
+<th colspan=2>0.65</th>
+</tr>
+<tr>
+<th>0.57</th>
+<th>0.52</th>
+<th colspan=2>0.68</th>
+<th colspan=2>0.67</th>
+<th colspan=2>0.73</th>
+<th colspan=2>0.61</th>
+</tr>
+<tr>
+<th>0.55</th>
+<th>0.53</th>
+<th colspan=2>0.66</th>
+<th colspan=2>0.62</th>
+<th colspan=2>0.49</th>
+<th colspan=2>0.69</th>
+</tr>
+<tr>
+<th>0.74</th>
+<th>0.61</th>
+<th colspan=2>0.42</th>
+<th colspan=2>0.58</th>
+<th colspan=2>0.63</th>
+<th colspan=2>0.56</th>
+</tr>
+<tr>
+<th>0.74</th>
+<th>0.63</th>
+<th colspan=2>0.53</th>
+<th colspan=2>0.57</th>
+<th colspan=2>0.66</th>
+<th colspan=2>0.68</th>
+</tr>
+then get average : 0.6013
+std: 0.0828
+Not a bad result but merely for a pilot test
+</table>
+
+##Train the SVM with more sophisticated kernels
+with the use of function:
+primal_svm(1,trainy(:,i),lambda,opt);
+
+* kernel types:
+nonlinear conjugate gradients: accuracy=0.5340
+newton step:0.5507
+linear newton step: 0.5307
+
 <table border=0 cellpadding=4 cellspacing=1>
 <tr>
 <th>Category name</th>
