@@ -5,7 +5,7 @@
 %neighbor, you can vote based on k nearest neighbors which will increase
 %performance (although you need to pick a reasonable value for k).
 
-function predicted_categories = nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats)
+function predicted_categories = nearest_neighbor_classify(categories,train_image_feats, train_labels, test_image_feats,k)
 % image_feats is an N x d matrix, where d is the dimensionality of the
 %  feature representation.
 % train_labels is an N x 1 cell array, where each entry is a string
@@ -37,9 +37,35 @@ Useful functions:
   [Y,I] = SORT(X) if you're going to be reasoning about many nearest
   neighbors 
 
+
+
 %}
 
+%1-nn
+%%
 
+
+% classer=zeros(length(train_labels),length(categories));
+% D=vl_alldist2(test_image_feats',train_image_feats');
+% [Y I]=min(D);
+% predicted_categories=train_labels(I);
+
+%%
+%k-nn
+% k=5;
+classer=zeros(length(train_labels),length(categories));
+%%
+D=vl_alldist2(test_image_feats',train_image_feats');
+[Y I]=sort(D);
+first_lab=train_labels(I(:,1:k));
+for i=1:length(categories);
+    classer(:,i)=sum(strcmp(categories{i},first_lab),2);
+end
+[Y2 I2]=max(classer,[],2);
+predicted_categories=categories(I2)';
+
+%%
+end
 
 
 

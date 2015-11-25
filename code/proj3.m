@@ -2,8 +2,9 @@
 
 % All of your code will be in "Step 1" and "Step 2", although you can
 % modify other parameters in the starter code.
-
+clear all, close all
 %% Step 0: Set up parameters, vlfeat, category list, and image paths.
+global X K
 
 %For this project, you will need to report performance for three
 %combinations of features / classifiers. It is suggested you code them in
@@ -16,12 +17,12 @@
 %results are presented.
 
 % FEATURE = 'tiny image';
-% FEATURE = 'bag of sift';
-FEATURE = 'placeholder';
+FEATURE = 'bag of sift';
+% FEATURE = 'placeholder';
 
 % CLASSIFIER = 'nearest neighbor';
-% CLASSIFIER = 'support vector machine';
-CLASSIFIER = 'placeholder';
+CLASSIFIER = 'support vector machine';
+% CLASSIFIER = 'placeholder';
 
 % set up paths to VLFeat functions. 
 % See http://www.vlfeat.org/matlab/matlab.html for VLFeat Matlab documentation
@@ -50,6 +51,11 @@ num_train_per_cat = 100;
 %and test image, as well as cell arrays with the label of each train and
 %test image. By default all four of these arrays will be 1500x1 where each
 %entry is a char array (or string).
+
+try_N=30;
+scores=zeros(try_N,1);
+% for ii = 1:30 % used as random choose 100 test and train set
+     
 fprintf('Getting paths and labels for all train and test data\n')
 [train_image_paths, test_image_paths, train_labels, test_labels] = ...
     get_image_paths(data_path, categories, num_train_per_cat);
@@ -65,25 +71,56 @@ fprintf('Getting paths and labels for all train and test data\n')
 % each function for more details.
 
 fprintf('Using %s representation for images\n', FEATURE)
+% for sift_sample_vocab=0.3:0.1:0.4 %iterate parameter
+%     for sift_sample_bow=0.3:0.1:0.9
+%         for lambda= [0.00001]
+%             for vocab_size=[10, 20, 50, 100, 200, 400, 1000, 10000]
+% lambda=0.001;
 
+opt='lin_cg';
+sift_sample_bow=0.9;
+sift_sample_vocab=0.3;
+lambda=0.00001;
+vocab_size=1000;
+% vocab_size=500;
+
+
+sift_step=15;
+
+% sift_step=20;
+k=14;
+use_vocab='';
+fprintf('when lambda = %u\n', lambda);
+fprintf('when sift_vocab = %u\n', sift_sample_vocab);
+fprintf('when sift_bow = %u\n', sift_sample_bow);
+fprintf('when vocab_size = %u\n', vocab_size);
+fprintf('when opt = %s\n', opt);
 switch lower(FEATURE)    
     case 'tiny image'
         % YOU CODE get_tiny_images.m 
         train_image_feats = get_tiny_images(train_image_paths);
         test_image_feats  = get_tiny_images(test_image_paths);
-        
+
     case 'bag of sift'
         % YOU CODE build_vocabulary.m
         if ~exist('vocab.mat', 'file')
             fprintf('No existing visual word vocabulary found. Computing one from training images\n')
-            vocab_size = 400; %Larger values will work better (to a point) but be slower to compute
-            vocab = build_vocabulary(train_image_paths, vocab_size);
+%             vocab_size = 400; %Larger values will work better (to a point) but be slower to compute
+            vocab = build_vocabulary(train_image_paths, vocab_size,sift_sample_vocab);
             save('vocab.mat', 'vocab')
         end
+%         for randportion=0.6:0.1:1
+%             vocab_size = 400; %Larger values will work better (to a point) but be slower to compute
+%             vocab = build_vocabulary(train_image_paths, vocab_size,randportion);
+%             save([num2str(randportion) 'vocab.mat'], 'vocab' )
+%         end
         
+%         vocab_size = 400; %Larger values will work better (to a point) but be slower to compute
+%         vocab = build_vocabulary(train_image_paths, vocab_size,sift_sample_vocab);
+%         save('vocab.mat', 'vocab')
         % YOU CODE get_bags_of_sifts.m
-        train_image_feats = get_bags_of_sifts(train_image_paths);
-        test_image_feats  = get_bags_of_sifts(test_image_paths);
+        train_image_feats = get_bags_of_sifts(train_image_paths,sift_step,use_vocab,sift_sample_bow);
+        test_image_feats  = get_bags_of_sifts(test_image_paths,sift_step,use_vocab,sift_sample_bow);
         
     case 'placeholder'
         train_image_feats = [];
@@ -107,15 +144,17 @@ end
 % for more details.
 
 fprintf('Using %s classifier to predict test set categories\n', CLASSIFIER)
+X= train_image_feats;
+K= train_image_feats*train_image_feats';
 
 switch lower(CLASSIFIER)    
     case 'nearest neighbor'
         % YOU CODE nearest_neighbor_classify.m 
-        predicted_categories = nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats);
+        predicted_categories = nearest_neighbor_classify(categories,train_image_feats, train_labels, test_image_feats,k);
         
     case 'support vector machine'
         % YOU CODE svm_classify.m 
-        predicted_categories = svm_classify(train_image_feats, train_labels, test_image_feats);
+        predicted_categories = svm_classify(train_image_feats, train_labels, test_image_feats,lambda,opt);
         
     case 'placeholder'
         %The placeholder classifier simply predicts a random category for
@@ -126,6 +165,7 @@ switch lower(CLASSIFIER)
     otherwise
         error('Unknown classifier type')
 end
+
 
 
 
@@ -140,13 +180,23 @@ end
 % thumbnails each time it is called. View the webpage to help interpret
 % your classifier performance. Where is it making mistakes? Are the
 % confusions reasonable?
-create_results_webpage( train_image_paths, ...
+accuracy=create_results_webpage( train_image_paths, ...
                         test_image_paths, ...
                         train_labels, ...
                         test_labels, ...
                         categories, ...
                         abbr_categories, ...
-                        predicted_categories)
+                        predicted_categories,...
+                        vocab_size)
+%     end
+%     end
+%     end
+% end
+% scores(ii)=accuracy;% used as random choose 100 test and train set
+
+% end
+% avg=mean(scores)% used as random choose 100 test and train set
+% standard=std(scores)% used as random choose 100 test and train set
 
 % Interpreting your performance with 100 training examples per category:
 %  accuracy  =   0 -> Your code is broken (probably not the classifier's

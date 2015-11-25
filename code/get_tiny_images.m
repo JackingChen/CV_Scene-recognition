@@ -17,7 +17,21 @@ function image_feats = get_tiny_images(image_paths)
 % square while ignoring their aspect ratio or you can crop the center
 % square portion out of each image. Making the tiny images zero mean and
 % unit length (normalizing them) will increase performance modestly.
+%%
+Nimg=length(image_paths);
+fig_dim=16;% 16*16 images
+image_feats=zeros(Nimg,fig_dim^2);
 
+for i=1:length(image_paths)
+    img= vl_imreadgray(image_paths{i}); % turn every image into gray value
+    img_resize=imresize(img,[16 16]);
+    img_resize=double(img_resize(:)');% flatten the matrix to one dimension array
+    
+    img_resize=img_resize-mean(img_resize);
+    img_resize=img_resize/norm(img_resize);
+    image_feats(i,:)=img_resize;
+end
+%%
 % suggested functions: imread, imresize
 
 
@@ -25,3 +39,4 @@ function image_feats = get_tiny_images(image_paths)
 
 
 
+end

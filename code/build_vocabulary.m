@@ -3,7 +3,7 @@
 %This function will sample SIFT descriptors from the training images,
 %cluster them with kmeans, and then return the cluster centers.
 
-function vocab = build_vocabulary( image_paths, vocab_size )
+function vocab = build_vocabulary( image_paths, vocab_size, randportion)
 % The inputs are images, a N x 1 cell array of image paths and the size of 
 % the vocabulary.
 
@@ -52,8 +52,29 @@ Useful functions:
 % Once you have tens of thousands of SIFT features from many training
 % images, cluster them with kmeans. The resulting centroids are now your
 % visual word vocabulary.
+%%
+% image_paths=train_image_paths;
+% vocab_size=400;
 
+siftstep=10;
+X=[];
+% randportion=1;%sample propotion
 
+for i=1:length(image_paths)
+    img=single(vl_imreadgray(image_paths{i}));
+    [FRAMES,DESCRS]=vl_dsift(img,'step',siftstep,'fast'); 
+    % sample the descriptors
+    N_des=length(DESCRS(1,:));
+    rand_size=floor(randportion*N_des);    
+    idx=randperm(N_des,rand_size);
+    DESCRS=DESCRS(:,idx);
+    
+    X=[X DESCRS];
+end
+[centers assignments] = vl_kmeans(double(X),vocab_size);
+vocab=centers';
+%%
+end
 
 
 

@@ -7,7 +7,7 @@
 %margin, is W*X + B where '*' is the inner product or dot product and W and
 %B are the learned hyperplane parameters.
 
-function predicted_categories = svm_classify(train_image_feats, train_labels, test_image_feats)
+function predicted_categories = svm_classify(train_image_feats, train_labels, test_image_feats,lambda,opt)
 % image_feats is an N x d matrix, where d is the dimensionality of the
 %  feature representation.
 % train_labels is an N x 1 cell array, where each entry is a string
@@ -45,8 +45,26 @@ Useful functions:
 %unique() is used to get the category list from the observed training
 %category list. 'categories' will not be in the same order as in proj3.m,
 %because unique() sorts them. This shouldn't really matter, though.
+%%
 categories = unique(train_labels); 
 num_categories = length(categories);
+predicted_categories=zeros(length(test_image_feats),1);
 
 
+%train 15 classifier
+ for i=1:num_categories % turn label into true false
+     trainy(:,i)=double(strcmp(categories(i),train_labels));
+     trainy=2*trainy-1;
+%      [w(:,i) b(:,i)]=vl_svmtrain(train_image_feats.',trainy(:,i)',lambda);   
+     [w(:,i) b(:,i)]=primal_svm(1,trainy(:,i),lambda,opt);
+ end
+
+ for i=1:length(test_image_feats(:,1))
+    predict_score(i,:)=test_image_feats(i,:)*w+b;
+ end
+ 
+ [V I]=max(predict_score,[],2);
+ predicted_categories=categories(I);
+
+end
 

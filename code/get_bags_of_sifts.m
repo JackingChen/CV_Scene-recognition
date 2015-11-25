@@ -3,7 +3,7 @@
 %This feature representation is described in the handout, lecture
 %materials, and Szeliski chapter 14.
 
-function image_feats = get_bags_of_sifts(image_paths)
+function image_feats = get_bags_of_sifts(image_paths,dsift_step,use_vocab,randportion)
 % image_paths is an N x 1 cell array of strings where each string is an
 % image path on the file system.
 
@@ -57,9 +57,44 @@ and using KD-trees.
  http://www.vlfeat.org/matlab/vl_kdtreebuild.html
 
 %}
-
-load('vocab.mat')
+%%
+% image_paths=train_image_paths;
+% vocab_size=400;
+namestring=[num2str(use_vocab) 'vocab.mat'];
+load(namestring)
 vocab_size = size(vocab, 2);
+histogram=zeros(length(vocab),1);
+image_feats=zeros(length(image_paths),length(vocab));
+kdtree=vl_kdtreebuild(vocab');
+
+KD=0;
+alld=1;
+opt=1;
+
+for i=1:length(image_paths)
+    img=single(vl_imreadgray(image_paths{i}));
+    [~,DESCRS]=vl_dsift(img,'step',dsift_step,'fast');
+    N_des=length(DESCRS(1,:));
+    rand_size=floor(randportion*N_des);
+    
+    idx=randperm(N_des,rand_size);
+    DESCRS=DESCRS(:,idx);
+    if opt == alld
+        D = vl_alldist2(double(DESCRS),double(vocab'));
+        [~,I]=min(D,[],2);
+%         I=sort(I);
+    elseif opt==KD
+        I = vl_kdtreequery(kdtree,double(vocab') , double(DESCRS));
+%         I=sort(I);    
+    end
+%     [v idx]=unique(I);
+    
+    [count ~]=hist(I,1:length(vocab));
+    image_feats(i,:)=double(count(:)/length(DESCRS));
+    
+end
+%%
+end
 
 
 

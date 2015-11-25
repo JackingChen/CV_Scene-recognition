@@ -1,0 +1,36 @@
+when lambda = 1.000000e-05
+when sift_vocab = 3.000000e-01
+when sift_bow = 1
+Using support vector machine classifier to predict test set categories
+Creating ../results/index.md, thumbnails, and confusion matrix
+Accuracy (mean of diagonal of confusion matrix) is 0.589
+
+when lambda = 1.000000e-05
+when sift_vocab = 3.000000e-01
+when sift_bow = 9.000000e-01
+Using support vector machine classifier to predict test set categories
+Creating ../results/index.md, thumbnails, and confusion matrix
+Accuracy (mean of diagonal of confusion matrix) is 0.583
+
+when lambda = 1.000000e-05
+when sift_vocab = 4.000000e-01
+when sift_bow = 7.000000e-01
+Using support vector machine classifier to predict test set categories
+Creating ../results/index.md, thumbnails, and confusion matrix
+Accuracy (mean of diagonal of confusion matrix) is 0.559
+
+when lambda = 1.000000e-05
+when sift_vocab = 4.000000e-01
+when sift_bow = 1
+Using support vector machine classifier to predict test set categories
+Creating ../results/index.md, thumbnails, and confusion matrix
+Accuracy (mean of diagonal of confusion matrix) is 0.593
+
+when lambda = 1.000000e-05
+when sift_vocab = 3.000000e-01
+when sift_bow = 9.000000e-01
+when vocab_size = 500
+Using support vector machine classifier to predict test set categories
+Creating ../results/index.md, thumbnails, and confusion matrix
+Accuracy (mean of diagonal of confusion matrix) is 0.600
+

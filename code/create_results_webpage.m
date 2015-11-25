@@ -15,7 +15,7 @@
 % This webpage is similar to the one we created for the SUN database in
 % 2010: http://people.csail.mit.edu/jxiao/SUN/classification397.html
 
-function create_results_webpage( train_image_paths, test_image_paths, train_labels, test_labels, categories, abbr_categories, predicted_categories)
+function accuracy=create_results_webpage( train_image_paths, test_image_paths, train_labels, test_labels, categories, abbr_categories, predicted_categories,vocab_size)
 
 fprintf('Creating ../results/index.md, thumbnails, and confusion matrix\n')
 
@@ -59,6 +59,9 @@ fprintf(     'Accuracy (mean of diagonal of confusion matrix) is %.3f\n', accura
 
 fig_handle = figure; 
 imagesc(confusion_matrix, [0 1]); 
+
+% imwrite(confusion_matrix, ['C:\Users\JackChen\Documents\GitHub\homework3\results\extra1\' num2str(vocab_size) '.jpg'])
+
 set(fig_handle, 'Color', [.988, .988, .988])
 axis_handle = get(fig_handle, 'CurrentAxes');
 set(axis_handle, 'XTick', 1:15)
