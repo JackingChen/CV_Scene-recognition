@@ -55,8 +55,8 @@ predicted_categories=zeros(length(test_image_feats),1);
  for i=1:num_categories % turn label into true false
      trainy(:,i)=double(strcmp(categories(i),train_labels));
      trainy=2*trainy-1;
-%      [w(:,i) b(:,i)]=vl_svmtrain(train_image_feats.',trainy(:,i)',lambda);   
-     [w(:,i) b(:,i)]=primal_svm(1,trainy(:,i),lambda,opt);
+     [w(:,i) b(:,i)]=vl_svmtrain(train_image_feats.',trainy(:,i)',lambda);   
+%      [w(:,i) b(:,i)]=primal_svm(1,trainy(:,i),lambda,opt);
  end
 
  for i=1:length(test_image_feats(:,1))
