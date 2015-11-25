@@ -3,16 +3,29 @@
 <img src="confusion_matrix.png">
 
 <br>
-Accuracy (mean of diagonal of confusion matrix) is 0.531
+Accuracy (mean of diagonal of confusion matrix) is 0.6
 <p>
 
 
 #Experiment 
 *Tiny image + k nearest neighbor
-By iterating over k from 5 to 15, Found an optimized parameter k=14
+By iterating over k from 5 to 15, Found an optimized parameter k=14 with accuracy : 0.08
+<img src="cm_tinynn.jpg">
+
+* Method explanation :
+1. Tiny image function resizes the original image into 16 * 16 pixels although it losses a lot of information but is is an easy way to serve as features, because it doesn't cause much computation resources.
+2. k nearest neighbor merely compares the test data features to each of the train data and find the top k nearest data points. After we select k nearest data, each of the data represents a catagory such as "kitchen". Then vote for the most likely catagory
+
+
 * Vocabulary building
 * bag of sift + k nearest neighbor:
 In bag of sift + k nearest neighbor, I iterated the step in the vl_dsift(img,'step',step) and found it reach the optimal value at step = 20
+with accuracy : 0.1287
+<img src="cm_bownn.jpg">
+
+* Method explanation :
+bag of sift method first build a vocabulary by classifying the descriptors (default: 400 dimensions)
+then in the testing pattern count the porpotion of the 
 
 #tried extra credits
 ##Experimental design extra credit:
