@@ -3,7 +3,7 @@
 <img src="confusion_matrix.png">
 
 <br>
-Accuracy (mean of diagonal of confusion matrix) is 0.6
+Accuracy (mean of diagonal of confusion matrix) is 0.5667
 <p>
 
 
